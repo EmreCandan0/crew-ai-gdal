@@ -1,0 +1,39 @@
+analyze_task:
+  description: >
+    Analyze the JP2 file in the given path.
+    You MUST call the analyze_file tool with {filepath} and use the result directly in your Final Answer.
+     Do not make up values or return placeholders like "", null, or unknown.
+     Extract minx, miny, maxx, maxy, filename, and elapsed_time from the tool output and return them as a JSON object.
+  expected_output: >
+    A JSON object with the following fields:
+    {
+      "message": "Status message confirming success.",
+      "minx": "Minimum x-coordinate (longitude or pixel space).",
+      "miny": "Minimum y-coordinate (latitude or pixel space).",
+      "maxx": "Maximum x-coordinate.",
+      "maxy": "Maximum y-coordinate.",
+      "filename": "The name of the analyzed file.",
+      "elapsed_time": "The time taken to perform the analysis (in seconds)."
+    }
+  agent: analyzer
+
+crop_task:
+  description: >
+    The user has provided the following bounding box coordinates:
+      - filepath: {filepath}
+      - crop_minx: {crop_minx}
+      - crop_miny: {crop_miny}
+      - crop_maxx: {crop_maxx}
+      - crop_maxy: {crop_maxy}
+
+    You MUST use these exact values when calling the crop_image tool.
+     Do not use values from previous tasks (like analyze_file).
+     Do not generate your own coordinates.
+    
+    Simply crop the image at the given path using the bounding box above and convert it to PNG format.
+  expected_output: >
+    A JSON object with the following fields:
+    {
+      "image_url": "path to png"
+    }
+  agent: cropper
